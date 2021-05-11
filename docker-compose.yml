@@ -8,24 +8,22 @@ services:
     ports:
       - "80:80"
     environment:
-      - NGINX_HOST=206.81.16.143
-      - NGINX_PROXY=http://identidock:5000
+      - NGINX_HOST=45.55.251.164
+      - NGINX_PROXY=http://identidock:9090
 
   identidock:
-    build: ./app
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./app:/app
+    image: amouat/identidock:1.0
     links:
       - dnmonster
       - redis
+    environment:
+      ENV: PROD
 
   dnmonster:
     image: amouat/dnmonster:1.0
 
   redis:
-    image: redis:3.0
+    image: redis:3
 
   logspout:
     image: amouat/logspout-logstash:1.0
