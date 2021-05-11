@@ -1,32 +1,35 @@
-proxy:
-  image: amouat/proxy:1.0
-  links:
-    - identidock
-  ports:
-    - "80:80"
-  environment:
-    - NGINX_HOST=localhost
-    - NGINX_PROXY=http://identidock:9090
+version: "3.0"
 
-identidock:
-  build: ./app
-  ports:
-    - "5000:5000"
-  volumes:
-    - ./app:/app
-  links:
-    - dnmonster
-    - redis
+services:
+  proxy:
+    image: amouat/proxy:1.0
+    links:
+      - identidock
+    ports:
+      - "80:80"
+    environment:
+      - NGINX_HOST=206.81.16.143
+      - NGINX_PROXY=http://identidock:5000
 
-dnmonster:
-  image: amouat/dnmonster:1.0
+  identidock:
+    build: ./app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/app
+    links:
+      - dnmonster
+      - redis
 
-redis:
-  image: redis:3.0
+  dnmonster:
+    image: amouat/dnmonster:1.0
 
-logspout:
-  image: amouat/logspout-logstash:1.0
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-  ports:
-    - "8000:80"
+  redis:
+    image: redis:3.0
+
+  logspout:
+    image: amouat/logspout-logstash:1.0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8000:80"
